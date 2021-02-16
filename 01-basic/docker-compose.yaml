@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  bios:
+    image: eosio/ci-contracts-builder:base-ubuntu-18.04-master
+    command: 
+      - nodeos 
+      - -e 
+      - -p 
+      - eosio 
+      - --plugin 
+      - eosio::chain_api_plugin 
+      - --plugin 
+      - eosio::history_api_plugin
+      - --http-validate-host 
+      - "false"
+      - --p2p-listen-endpoint 
+      - 0.0.0.0:9876
+      - --allowed-connection 
+      - any
+  peer:
+    image: eosio/ci-contracts-builder:base-ubuntu-18.04-master
+    command: 
+      - nodeos 
+      - --p2p-peer-address
+      - bios:9876
+    depends_on: 
+      - bios

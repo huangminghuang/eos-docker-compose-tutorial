@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  bios:
+    image: eosio/ci-contracts-builder:base-ubuntu-18.04-master
+    command: 
+      - nodeos 
+      - -e 
+      - --producer-name 
+      - eosio 
+      - --plugin 
+      - eosio::producer_api_plugin 
+      - --config-dir
+      - /etc/eosio
+    volumes:
+      - ./config.ini:/etc/eosio/config.ini
+  peer:
+    image: eosio/ci-contracts-builder:base-ubuntu-18.04-master
+    command: 
+      - nodeos 
+      - --p2p-peer-address
+      - bios:9876
+      - --config-dir
+      - /etc/eosio
+    volumes:
+      - ./config.ini:/etc/eosio/config.ini
+    depends_on: 
+      - bios

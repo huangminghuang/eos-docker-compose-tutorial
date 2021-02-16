@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  bios:
+    image: eosio/ci-contracts-builder:base-ubuntu-18.04-master
+    command:
+      - nodeos 
+      - --enable-stale-production 
+      - --producer-name 
+      - eosio 
+      - --plugin 
+      - eosio::producer_api_plugin 
+      - --config-dir
+      - /etc/eosio
+    volumes:
+      - ./config.ini:/etc/eosio/config.ini
+
+  bootstrap:
+    image: eosio/ci-contracts-builder:base-ubuntu-18.04-develop
+    command:
+      - boot.sh 
+    volumes:
+      - ./boot.sh:/usr/local/bin/boot.sh
+      - producer-keys:/etc/eosio/producers:ro
+  depends_on: 
+      - bios
+
+  defproducera:
+    hostname: defproducera
+    image: eosio/ci-contracts-builder:base-ubuntu-18.04-develop 
+    command:
+      - producer.sh
+      - --config-dir
+      - /etc/eosio
+    environment:
+      peers: bios:9876
+    volumes:
+      - ./config.ini:/etc/eosio/config.ini
+      - ./producer.sh:/usr/local/bin/producer.sh
+      - producer-keys:/etc/eosio/producers:rw
+  depends_on: 
+      - bios
+      
+volumes:
+  producer-keys:
