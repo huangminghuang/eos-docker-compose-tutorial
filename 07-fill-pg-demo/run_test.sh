@@ -1,2 +1,3 @@
 #!/bin/bash
-docker-compose -f docker-compose.yaml -f docker-compose.test.yaml up --exit-code-from validate-db
+[ -f snapshot.bin ] || ./get_snapshot.sh
+docker-compose -f docker-compose.yaml -f docker-compose.test.yaml up --exit-code-from postgres-query

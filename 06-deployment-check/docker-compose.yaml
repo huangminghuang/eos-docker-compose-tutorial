@@ -44,7 +44,7 @@ services:
     command:
       - bash 
       - -c
-      - "boot.sh && sleep 60 && [[ 'defproducera defproducerb' == $(./producers_from_irreversible_blocks.sh bios) ]]"
+      - "boot.sh && sleep 60 && [[ 'defproducera defproducerb' == `./producers_from_irreversible_blocks.sh bios` ]]"
     volumes:
       - ./boot.sh:/usr/local/bin/boot.sh
       - ./producers_from_irreversible_blocks.sh:/usr/local/bin/producers_from_irreversible_blocks.sh
